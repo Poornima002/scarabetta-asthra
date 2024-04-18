@@ -36,6 +36,7 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { useEffect } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 const FormSchema = z.object({
   name: z.string().min(3, {
@@ -46,6 +47,9 @@ const FormSchema = z.object({
   }),
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
+  }),
+  role: z.string().min(2, {
+    message: "role is requered",
   }),
 });
 
@@ -59,6 +63,7 @@ export function SignUpForm() {
       name: "",
       email: "",
       password: "",
+      role: ""
     },
   });
   useEffect(() => {
@@ -70,26 +75,25 @@ export function SignUpForm() {
     return unsubscribe;
   }, [router]);
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    const res = await createUserWithEmailAndPassword(data.email, data.password);
-    console.log(res);
-    if (res?.user) {
-      updateUser(data.name);
-    }
-    // add data to user collection
-    const userCollectionRef: CollectionReference<DocumentData> = collection(
-      db,
-      "user"
-    );
-    await addDoc(userCollectionRef, {
-      uid: res?.user.uid,
-      name: data.name,
-      email: data.email,
-      status: "Joined",
-      time: "00:00:00",
-      rank: 0,
-      score: 0,
-    });
-    router.push("/treasurehunt");
+    console.log(data);
+
+    // const res = await createUserWithEmailAndPassword(data.email, data.password);
+    // console.log(res);
+    // if (res?.user) {
+    //   updateUser(data.name);
+    // }
+    // // add data to user collection
+    // const userCollectionRef: CollectionReference<DocumentData> = collection(
+    //   db,
+    //   "user"
+    // );
+    // await addDoc(userCollectionRef, {
+    //   uid: res?.user.uid,
+    //   name: data.name,
+    //   email: data.email,
+    //   role:data.role
+    // });
+    // router.push("/treasurehunt");
   };
   return (
     <Card className="w-[350px]">
@@ -135,6 +139,30 @@ export function SignUpForm() {
                   <FormControl>
                     <Input placeholder="password" type="password" {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Password must be at least 8 characters.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value} >
+                    <FormControl >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a verified email to display" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="m@example.com">Driver</SelectItem>
+                      <SelectItem value="m@google.com">student</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormDescription>
                     Password must be at least 8 characters.
                   </FormDescription>
