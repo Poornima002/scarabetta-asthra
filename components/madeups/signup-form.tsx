@@ -69,7 +69,9 @@ export function SignUpForm() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        router.push("/treasurehunt");
+        console.log(user);
+        
+        // router.push("/signin");
       }
     });
     return unsubscribe;
@@ -77,23 +79,23 @@ export function SignUpForm() {
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log(data);
 
-    // const res = await createUserWithEmailAndPassword(data.email, data.password);
-    // console.log(res);
-    // if (res?.user) {
-    //   updateUser(data.name);
-    // }
-    // // add data to user collection
-    // const userCollectionRef: CollectionReference<DocumentData> = collection(
-    //   db,
-    //   "user"
-    // );
-    // await addDoc(userCollectionRef, {
-    //   uid: res?.user.uid,
-    //   name: data.name,
-    //   email: data.email,
-    //   role:data.role
-    // });
-    // router.push("/treasurehunt");
+    const res = await createUserWithEmailAndPassword(data.email, data.password);
+    console.log(res);
+    if (res?.user) {
+      updateUser(data.name);
+    }
+    // add data to user collection
+    const userCollectionRef: CollectionReference<DocumentData> = collection(
+      db,
+      "user"
+    );
+    await addDoc(userCollectionRef, {
+      uid: res?.user.uid,
+      name: data.name,
+      email: data.email,
+      role:data.role
+    });
+    // router.push("/signin");
   };
   return (
     <Card className="w-[350px]">
@@ -159,8 +161,8 @@ export function SignUpForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="m@example.com">Driver</SelectItem>
-                      <SelectItem value="m@google.com">student</SelectItem>
+                      <SelectItem value="driver">Driver</SelectItem>
+                      <SelectItem value="student">Student</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormDescription>

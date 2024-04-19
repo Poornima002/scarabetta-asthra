@@ -42,14 +42,14 @@ export function SignInForm() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        router.push("/treasurehunt");
+        router.push("/signin");
       }
     });
     return unsubscribe;
   }, [router]);
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const res = await signInWithEmailAndPassword(data.email, data.password);
-    router.push("/treasurehunt");
+    router.push("/signin");
   };
   return (
     <Form {...form}>

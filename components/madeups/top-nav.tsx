@@ -64,7 +64,7 @@ const TopNav = () => {
           </DropdownMenu>
         </div>
 
-        {user && pathname === "/treasurehunt" && (
+        {user && pathname === "/signin" && (
           <div className="w-[33.3%] flex justify-center">
             <Badge
               variant="destructive"
